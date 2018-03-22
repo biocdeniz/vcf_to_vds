@@ -1,0 +1,12 @@
+s/ID=AC,Number=-1,Type=Integer/ID=AC,Number=A,Type=Integer/
+s/ID=AF,Number=-1,Type=Float,Description=/ID=AF,Number=A,Type=Float,Description=/
+s/ID=GC,Number=-1,Type=Integer,Description=/ID=GC,Number=G,Type=Integer,Description=/
+s/ID=HWEAF,Number=-1,Type=Float,Description=/ID=HWEAF,Number=G,Type=Float,Description=/
+s/ID=HWDGF,Number=-1,Type=Float,Description=/ID=HWDGF,Number=G,Type=Float,Description=/
+s/ID=OVERLAP,Number=-1,Type=String,Description=/ID=OVERLAP,Number=.,Type=String,Description=/
+s/ID=ANN,Number=-1,Type=String,Description=/ID=ANN,Number=.,Type=String,Description=/
+s/ID=LOF,Number=-1,Type=String,Description=/ID=LOF,Number=.,Type=String,Description=/
+s/ID=NMD,Number=-1,Type=String,Description=/ID=NMD,Number=.,Type=String,Description=/
+s/ID=PL,Number=-1,Type=Integer,Description=/ID=PL,Number=G,Type=Integer,Description=/
+s/ID=AD,Number=-1,Type=Integer,Description=/ID=AD,Number=.,Type=Integer,Description=/
+31i ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
