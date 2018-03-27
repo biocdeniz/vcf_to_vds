@@ -1,7 +1,25 @@
-#!/bin/sh
+#!/bin/sh 
 
 
-# This script will download genomics files from dbGaP, and process them to create .vds files
+# This routine will exit the script with an error message sent to a special place
+# or if setup for that special place is missing, then to the screen.
+function die() {
+	MSG=$1
+	if [ -z "$SPECIAL_PLACE" ]; then
+		logger "FAILURE ${MSG}"
+	else
+		$SPECIAL_PLACE "${MSG}"
+	fi
+	exit 1
+}
+
+function logger() {
+	MSG=$1
+	TIMESTAMP=`date +%c`
+	echo "${TIMESTAMP} ${MSG}"
+}
+
+logger "This script will download genomics files from dbGaP, and process them to create .vds files"
 
 # Set some environment variables
 export SRA_TOOLKIT=/opt/sratoolkit.2.9.0-centos_linux64
@@ -9,29 +27,37 @@ export BCF_TOOLS=/opt/bcftools-1.7
 
 # set the working directory
 if [ -z "$WD" ]; then
-    echo "Working directory is not set. Using default `/var/tmp`"
+    logger "Working directory is not set. Using default '/var/tmp'"
     export WD=/var/tmp
 fi
-cd $WD
 
 # install the sratoolkit
+logger "Installing sra toolkit"
 
 # install aspera
+logger "Installing 'aspera'"
 
 # install bcftools
+logger "Installing 'bcftools'"
 
 # install parallel
+logger "Installing 'parallel'"
 
 # get the key
-KEY=*.ngc
+logger "Get key files"
 
 # Get the project number
+aws s3 cp s3://avl-hail-dev/keys/*.krt $WD
+[ $? -ne 0 ] && die "Could not copy keys from S3"
+
 PROJECT=`echo $KEY | cut -d "." -f 1 | cut -d "_" -f 2`
 
 # Import the key
+logger "Import keys"
 $SRA_TOOLKIT/bin/vdb-config --import $KEY
 
 # change the root directory
+logger "Running 'vdb-config' to set ROOT directory to ${WD}"
 $SRA_TOOLKIT/bin/vdb-config --set /repository/user/protected/dbGaP-${PROJECT}/root=${WD}
 
 # get the convert_hail file
