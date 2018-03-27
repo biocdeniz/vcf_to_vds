@@ -3,9 +3,15 @@
 
 # This script will download genomics files from dbGaP, and process them to create .vds files
 
+# Set some environment variables
+export SRA_TOOLKIT=/opt/sratoolkit.2.9.0-centos_linux64
+export BCF_TOOLS=/opt/bcftools-1.7
 
 # set the working directory
-WD=/scratch/test_greg
+if [ -z "$WD" ]; then
+    echo "Working directory is not set. Using default `/var/tmp`"
+    export WD=/var/tmp
+fi
 cd $WD
 
 # install the sratoolkit
@@ -23,20 +29,20 @@ KEY=*.ngc
 PROJECT=`echo $KEY | cut -d "." -f 1 | cut -d "_" -f 2`
 
 # Import the key
-/opt/sratoolkit.2.8.2-1-centos_linux64/bin/vdb-config --import $KEY
+$SRA_TOOLKIT/bin/vdb-config --import $KEY
 
 # change the root directory
-/opt/sratoolkit.2.8.2-1-centos_linux64/bin/vdb-config --set /repository/user/protected/dbGaP-${PROJECT}/root=${WD}
+$SRA_TOOLKIT/bin/vdb-config --set /repository/user/protected/dbGaP-${PROJECT}/root=${WD}
 
 # get the convert_hail file
 HAIL_SCRIPT=greg_write_vcf.py
 
 # download the tarred files from dbGaP. There is 1 .krt file (~2Mb) per patient group (between 1 and 4 patient group per study)
 # it will download 1 encrypted tar.gz file (~30Gb) per patient group
-ls *.krt | parallel-20180222/bin/parallel /opt/sratoolkit.2.8.2-1-centos_linux64/bin/prefetch -X 200G
+ls *.krt | /usr/local/bin/parallel $SRA_TOOLKIT/bin/prefetch -X 200G
 
 # decrypt the tar.gz files (still ~30Gb each)
-/opt/sratoolkit.2.8.2-1-centos_linux64/bin/vdb-decrypt ${WD}/files
+$SRA_TOOLKIT/bin/vdb-decrypt ${WD}/files
 
 # untar them
 # each .tar.gz files contains 23 .vcf.gz files (~1.5Gb each)
@@ -46,32 +52,31 @@ function untar_files() {
 }
 export -f untar_files
 
-find -name *.tar* -type f |	parallel-20180222/bin/parallel untar_file
+find -name *.tar* -type f | /usr/local/bin/parallel untar_file
 
 # this function will unzip the .vcf.gz (~1.5Gb each) to a .vcf file (~100Gb each!!!!!!!!), fix the mistakes inside, and the re-compress them into a .vcf.bgz file (~1.5Gb each)
 function gz_to_bgz () {
 	VCF=`echo $1 | sed 's/.gz//g'`
-  gunzip -c "$1" | sed --file=VCFConversion.txt > $VCF
+  	gunzip -c "$1" | sed --file=VCFConversion.txt > $VCF
 	rm -f $1
-	/opt/bcftools/bin/bcftools view $VCF -Oz -o ${VCF}.bgz
+	$BCF_TOOLS/bin/bcftools view $VCF -Oz -o ${VCF}.bgz
 	rm -f $VCF
-	/opt/bcftools/bin/bcftools index -f ${VCF}.bgz
+	$BCF_TOOLS/bin/bcftools index -f ${VCF}.bgz
 	
 }
 export -f gz_to_bgz
 	
-find -name *.vcf.gz -type f | parallel-20180222/bin/parallel gz_to_bgz
+find -name *.vcf.gz -type f | /usr/local/bin/parallel gz_to_bgz
 
 # this function will merge the vcf from the same chromosome across each consent group, and create 23 merged_VCF files
 function merge () {
-	BCFTOOlS=/opt/bcftools/bin/bcftools
 	VCF_LIST=`find -name cg*chr${1}.*vcf.bgz -type f`
-  /opt/bcftools/bin/bcftools merge -m none -O z -o merged_chr${1}.vcf.bgz ${VCF_LIST}
+  	$BCF_TOOLS/bin/bcftools merge -m none -O z -o merged_chr${1}.vcf.bgz ${VCF_LIST}
 	rm $VCF_LIST
 }
 export -f merge
 
-parallel-20180222/bin/parallel merge ::: {1..22}
+/usr/local/bin/parallel merge ::: {1..22}
 merge X
 
 # ships everything to s3
