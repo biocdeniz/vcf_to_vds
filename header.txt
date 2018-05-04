@@ -1,0 +1,42 @@
+##fileformat=VCFv4.1
+##source=pseq
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count for each alternate allele">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Frequency for each alternate allele (estimated from primary data, not called genotypes)">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Combined depth across samples">
+##INFO=<ID=AVGDP,Number=1,Type=Float,Description="Average Depth per Sample">
+##INFO=<ID=GC,Number=G,Type=Integer,Description="Genotype Counts">
+##INFO=<ID=GN,Number=1,Type=Integer,Description="Total Number of Genotypes">
+##INFO=<ID=HWEAF,Number=G,Type=Float,Description="Genotype likelihood based Allele Frequency assuming HWE">
+##INFO=<ID=HWDGF,Number=G,Type=Float,Description="Genotype likelihood based Genotype Frequency ignoring HWE">
+##INFO=<ID=IBC,Number=1,Type=Float,Description="Inbreeding Coefficients calculated from genotype likelihoods">
+##INFO=<ID=HWE_SLP,Number=1,Type=Float,Description="Signed log p-values testing  statistics based Hardy Weinberg ln(Likelihood Ratio)">
+##INFO=<ID=ABE,Number=1,Type=Float,Description="Expected allele Balance towards Reference Allele on Heterozygous Sites">
+##INFO=<ID=ABZ,Number=1,Type=Float,Description="Average Z-scores of Allele Balance towards Reference Allele on Heterozygous Sites">
+##INFO=<ID=NS_NREF,Number=1,Type=Integer,Description="Number of samples with non-reference reads">
+##INFO=<ID=BQZ,Number=1,Type=Float,Description="Correlation between base quality and alleles">
+##INFO=<ID=CYZ,Number=1,Type=Float,Description="Correlation between cycle and alleles">
+##INFO=<ID=STZ,Number=1,Type=Float,Description="Correlation between strand and alleles">
+##INFO=<ID=NMZ,Number=1,Type=Float,Description="Correlation between mismatch counts per read and alleles">
+##INFO=<ID=IOR,Number=1,Type=Float,Description="Inflated rate of observing of other alleles in log10 scale">
+##INFO=<ID=NM0,Number=1,Type=Float,Description="Average number of mismatches in the reads with ref alleles">
+##INFO=<ID=NM1,Number=1,Type=Float,Description="Average number of mismatches in the reads with non-ref alleles">
+##INFO=<ID=SVM,Number=1,Type=Float,Description="Milk-SVM score for variant quality, passing -0.5 or greater">
+##INFO=<ID=OVERLAP,Number=.,Type=String,Description="Overlap with possible variant types">
+##INFO=<ID=ANN,Number=.,Type=String,Description="Functional annotations: 'Allele | Annotation | Annotation_Impact | Gene_Name | Gene_ID | Feature_Type | Feature_ID | Transcript_BioType | Rank | HGVS.c | HGVS.p | cDNA.pos / cDNA.length | CDS.pos / CDS.length | AA.pos / AA.length | Distance | ERRORS / WARNINGS / INFO'">
+##INFO=<ID=LOF,Number=.,Type=String,Description="Predicted loss of function effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+##INFO=<ID=NMD,Number=.,Type=String,Description="Predicted nonsense mediated decay effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+##INFO=<ID=IS_HWE_SLP,Number=1,Type=Float,Description="Signed log10 pvalue of HWE test with individual-sepcific allele frequencyes">
+##INFO=<ID=IS_IBC,Number=1,Type=Float,Description="Inbreeding coefficient with individual-sepcific allele frequencies">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="phred-scaled genotype likelihoods; for AA,AB,BB where A=ref, B=alt">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="phred-scaled genotype quality, -10log_10p(genotype call is wrong)">
+##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allele Depth">
+##FILTER=<ID=PASS,Description="Passed variant FILTERs">
+##FILTER=<ID=overlap_snp,Description="Overlaps with snp">
+##FILTER=<ID=overlap_indel,Description="Overlaps with indel">
+##FILTER=<ID=overlap_vntr,Description="Overlaps with VNTR">
+##FILTER=<ID=SVM,Description="Variant failed SVM filter">
+##FILTER=<ID=DISC,Description="Mendelian or duplicate genotype discordance is high (3/5% or more)">
+##FILTER=<ID=EXHET,Description="Excess heterozygosity with HWE p-value < 1e-6">
