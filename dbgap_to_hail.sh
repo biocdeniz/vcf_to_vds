@@ -1,14 +1,31 @@
 #!/bin/sh
 
 ## pre-installed software needed:
-# sratoolkit
 # bcftools
 # parallel
 
 ## files needded
 # project key
-# header.txt
 # cart files
+
+# update yum
+sudo yum -y update
+sudo yum -y install gcc
+
+# install sratoolkit
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
+tar -xf sratoolkit.current-centos_linux64.tar.gz
+rm sratoolkit.current-centos_linux64.tar.gz
+PATH=~/sratoolkit.2.9.0-centos_linux64/bin:$PATH
+
+# install bcftools
+brew install bcftools
+
+# install parallel
+brew install parallel
+
+# get the header file
+wget https://raw.githubusercontent.com/gversmee/vcf_to_vds/master/header.txt
 
 function logger() {
 	MSG=$1
@@ -20,7 +37,6 @@ export -f logger
 # Set some environment variables
 export SRA_TOOLKIT=/opt/sratoolkit.2.9.0-centos_linux64
 export WD=`pwd`
-PATH=$PATH:/opt/sratoolkit.2.9.0-centos_linux64/bin
 
 # get the key
 KEY=`ls *.ngc`
@@ -119,3 +135,7 @@ export -f merge
 logger "Launch the whole merging process"
 parallel --ungroup merge ::: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X
 logger "Full merging process finished"
+
+rm dbgap_to_hail.sh header.txt
+
+aws ec2 stop-instances --instance-ids i-0e66363ec98851c6e
