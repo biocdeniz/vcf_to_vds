@@ -138,4 +138,7 @@ logger "Full merging process finished"
 
 rm dbgap_to_hail.sh header.txt
 
+aws s3 cp output.txt s3://versmee-etl/${NAME}/output.txt
+aws s3 cp err.txt s3://versmee-etl/${NAME}/err.txt
+
 aws ec2 stop-instances --instance-ids i-0e66363ec98851c6e
