@@ -16,7 +16,7 @@ sudo yum -y install gcc
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
 tar -xf sratoolkit.current-centos_linux64.tar.gz
 rm sratoolkit.current-centos_linux64.tar.gz
-PATH=~/sratoolkit.2.9.0-centos_linux64/bin:$PATH
+export PATH=~/sratoolkit.2.9.0-centos_linux64/bin:$PATH
 
 # install bcftools
 brew install bcftools
