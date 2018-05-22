@@ -60,20 +60,20 @@ prefetch -X 200G $KRT
 
 # decrypt the tar.gz.ncbi_enc files (still ~30Gb each)
 logger "Decrypting files"
-ENC=`find ./files -type f`
+ENC=`find ./files -type f -name "*genotype-calls-vcf*.tar.gz*"`
 parallel --link vdb-decrypt ::: $ENC ::: `echo $ENC | xargs -n1 basename | sed 's/\.ncbi_enc//g'`
 
 # get folder name
-export TNAME=`ls *.tar.gz | head -1`
+export TNAME=`ls *genotype-calls-vcf*.tar.gz | head -1`
 export FNAME=`echo $TNAME| cut -d "." -f 1-5`
-export STNAME=`tar -tf ${TNAME} | head -2 | tail -1 | cut -d "/" -f 2 | cut -d "_" -f 3`
+export STNAME=`tar -tf ${TNAME} | head -2 | tail -1 | cut -d "/" -f 2 | tr _ "\n" | grep phs`
 export NAME="${STNAME}.${FNAME}"
 logger "Will place the files in the folder ${NAME} on s3://versmee-etl"
 
 # mv the cart files and the crypted files to s3
 logger "Moving the kart files to s3"
 aws s3 mv . s3://versmee-etl/${NAME}/krt --recursive --exclude "*" --include "*.krt"
-aws s3 mv files s3://versmee-etl/${NAME}/tar_gz_encrypted --recursive --exclude "*" --include "*"
+aws s3 mv files s3://versmee-etl/${NAME}/tar_gz_encrypted --recursive --exclude "*" --include "*genotype-calls-vcf*.tar.gz*"
 rm -rf files
 
 # This function takes a vcf.gz inside a tar.gz file, and create a .vcf.bgz and ship it to s3
