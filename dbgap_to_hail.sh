@@ -74,7 +74,8 @@ logger "Will place the files in the folder ${NAME} on s3://versmee-etl"
 logger "Moving the kart files to s3"
 aws s3 mv . s3://versmee-etl/${NAME}/krt --recursive --exclude "*" --include "*.krt"
 aws s3 mv files s3://versmee-etl/${NAME}/tar_gz_encrypted --recursive --exclude "*" --include "*genotype-calls-vcf*.tar.gz*"
-rm -rf files
+rm -rf files .ncbi sratoolkit* $KEY
+
 
 # This function takes a vcf.gz inside a tar.gz file, and create a .vcf.bgz and ship it to s3
 function tar_to_bgz {
@@ -138,7 +139,7 @@ logger "Full merging process finished"
 
 rm dbgap_to_hail.sh header.txt
 
-aws s3 cp output.txt s3://versmee-etl/${NAME}/output.txt
-aws s3 cp err.txt s3://versmee-etl/${NAME}/err.txt
+aws s3 mv output.txt s3://versmee-etl/${NAME}/output.txt
+aws s3 mv err.txt s3://versmee-etl/${NAME}/err.txt
 
-#aws ec2 stop-instances --instance-ids i-0e66363ec98851c6e
+aws ec2 stop-instances --instance-ids i-0e66363ec98851c6e
